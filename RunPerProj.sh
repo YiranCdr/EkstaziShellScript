@@ -48,6 +48,12 @@ run() {
     end_time=`date +%s`
     printf `expr $end_time - $start_time` >> $timeFileName
     printf "," >> $timeFileName 
+    # Remove color information from logfiles (for maven ouput)
+    rm -f "${logFileName}s"
+    sed 's/\x1B[@A-Z\\\]^_]\|\x1B\[[0-9:;<=>?]*[-!"#$%&'"'"'()*+,.\/]*[][\\@A-Z^_`a-z{|}~]//g' $logFileName > "${logFileName}s"
+    rm $logFileName
+    mv "${logFileName}s" $logFileName
+    rm "${logFileName}s"
     # Check if maven build successfully
     if [[ "$mvnExitCode" -ne 0 ]] 
     then
@@ -76,6 +82,12 @@ run() {
     end_time=`date +%s`
     printf `expr $end_time - $start_time` >> $timeFileName
     printf "," >> $timeFileName 
+    # Remove color information from logfiles (for maven ouput)
+    rm -f "${logFileName}s"
+    sed 's/\x1B[@A-Z\\\]^_]\|\x1B\[[0-9:;<=>?]*[-!"#$%&'"'"'()*+,.\/]*[][\\@A-Z^_`a-z{|}~]//g' $logFileName > "${logFileName}s"
+    rm $logFileName
+    mv "${logFileName}s" $logFileName
+    rm "${logFileName}s"
     if [[ "$mvnExitCode" -ne 0 ]]
     then
       # Print out exe time if the following 1 step are not exed at all. 
@@ -106,6 +118,12 @@ run() {
     end_time=`date +%s`
     printf `expr $end_time - $start_time` >> $timeFileName
     printf "," >> $timeFileName 
+    # Remove color information from logfiles (for maven ouput)
+    rm -f "${logFileName}s"
+    sed 's/\x1B[@A-Z\\\]^_]\|\x1B\[[0-9:;<=>?]*[-!"#$%&'"'"'()*+,.\/]*[][\\@A-Z^_`a-z{|}~]//g' $logFileName > "${logFileName}s"
+    rm $logFileName
+    mv "${logFileName}s" $logFileName
+    rm "${logFileName}s"
     if [[ "$mvnExitCode" -ne 0 ]]
     then
       return 1
@@ -143,6 +161,7 @@ main() {
   if [[ "$?" -ne 0 ]]
   then
     printf "1,\n" >> $timeFileName
+    round=1+$round
   else
     printf "0,\n" >> $timeFileName 
   fi
