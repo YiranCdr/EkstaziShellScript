@@ -43,7 +43,7 @@ run() {
   if [[ $ifExecuteWithoutEkstazi == true ]]
   then
     start_time=`date +%s`
-    mvn clean install >> $logFileName
+    mvn -Drat.ignoreErrors=true -Dcheckstyle.skip clean install >> $logFileName
     mvnExitCode=$?
     end_time=`date +%s`
     printf `expr $end_time - $start_time` >> $timeFileName
@@ -63,14 +63,15 @@ run() {
   if [[ $ifExecuteOriginalEkstazi == true ]]
   then
     # Modifiy pom.xml to load ekstazi
-    python ../Res/ekstaziInsertionOriEkstazi.py pom.xml
+    python ../Res/ekstaziInsertionOriEkstazi.py pom.xml 
+    rm -rf .ekstazi
     prevEkstaziFolder="../Res/${projectName}/.ekstazi"
     if [[ -d $prevEkstaziFolder ]]
     then
       cp -r $prevEkstaziFolder .ekstazi
     fi
     start_time=`date +%s`
-    mvn clean install >> $logFileName
+    mvn -Drat.ignoreErrors=true -Dcheckstyle.skip clean install >> $logFileName
     mvnExitCode=$?
     end_time=`date +%s`
     printf `expr $end_time - $start_time` >> $timeFileName
@@ -100,7 +101,7 @@ run() {
     #   cp -r $prevEkstaziFolder .ekstazi
     # fi
     start_time=`date +%s`
-    mvn clean install >> $logFileName
+    mvn -Drat.ignoreErrors=true -Dcheckstyle.skip clean install >> $logFileName
     mvnExitCode=$?
     end_time=`date +%s`
     printf `expr $end_time - $start_time` >> $timeFileName
@@ -121,6 +122,9 @@ main() {
   cd $projectName
   git clean -fd
   git checkout -f origin/master
+  # Make sure that previous ekstazi is removed. 
+  rm -rf .ekstazi
+  rm -rf ../Res/$projectName/.ekstazi
   time=$(date "+%Y%m%d-%H%M%S")
   # Mainly record maven output
   logFileName="../Res/$projectName/$time.log"
@@ -166,4 +170,4 @@ main() {
 # Param1: project name
 # main $1
 
-main javapoet
+main commons-cli
