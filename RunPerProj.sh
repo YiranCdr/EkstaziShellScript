@@ -170,4 +170,4 @@ main() {
 # Param1: project name
 # main $1
 
-main commons-cli
+main javapoet
