@@ -1,7 +1,3 @@
-# WARNING: PLEASE MAKE SURE THAT COMMIT ORIGIN/MASTER IS WORKIGN FOR ALL EKSTAZI EXE. 
-# To check the pure version (without debugging any info) of log file, appliy this regex to your sublimeText by pressing ctrl + H.
-# (^extendedLoad:.*\n)|(^file:/mnt/c/MyProj/EkstaziShellScript/javapoet/target.*.class.*\n)|(jar:file:/home/yiran/.m2/repository.*\n)|(^extendedSave:.*\n)|(^/mnt/c/MyProj/EkstaziShellScript/javapoet/.ekstazi\n)|(^clz.*\n)|(^\[file:/mnt/c/MyProj/EkstaziShellScript.*\n)
-
 # Param1: N. Roll back N commits.
 rollBackN() {
     # clean untracked files like .ekstazi/*
@@ -26,16 +22,18 @@ rollBackLastValid() {
 # Param1: projectName
 # Param2: logFileName
 # Param3: timeFileName
+# Param4: phaseTimeFileName
 # Param5: ifExecuteWithoutEkstazi true/false
-# Param5: ifExecuteOriginalEkstazi true/false
-# Param6: ifExecuteOurEkstazi true/false
+# Param6: ifExecuteOriginalEkstazi true/false
+# Param7: ifExecuteOurEkstazi true/false
 run() {
   projectName=$1
   logFileName=$2
   timeFileName=$3
-  ifExecuteWithoutEkstazi=$4
-  ifExecuteOriginalEkstazi=$5
-  ifExecuteOurEkstazi=$6
+  phaseTimeFileName=$4
+  ifExecuteWithoutEkstazi=$5
+  ifExecuteOriginalEkstazi=$6
+  ifExecuteOurEkstazi=$7
   cp pom.xml ../Res/$1/pom.xml
   printf "$(git rev-parse HEAD)," >> $timeFileName
 
@@ -58,7 +56,8 @@ run() {
     if [[ "$mvnExitCode" -ne 0 ]] 
     then
       # Print out exe time if the following 2 steps are not exed at all. 
-      printf "0,0," >> $timeFileName
+      printf "0,0," >> $timeFileName      
+      printf "0,0,0,0,\n" >> $phaseTimeFileName
       return 1
     fi
   else
@@ -92,8 +91,13 @@ run() {
     then
       # Print out exe time if the following 1 step are not exed at all. 
       printf "0," >> $timeFileName
+      # If build fail, and tmptimeA.csv exist, record the phase time as 0.
+      printf "0,0,0,0,\n" >> $phaseTimeFileName
       return 1
     fi
+    # If build success, and tmptimeA.csv exist, record the phase time. 
+    timeParseOutput=$(python ../Res/EkstaziTimeParser.py)
+    printf "$timeParseOutput\n" >> $phaseTimeFileName
     # if build success, rm the original .ekstazi folder, copy-past the new .ekstazi folder
     rm -rf $prevEkstaziFolder
     cp -r .ekstazi $prevEkstaziFolder
@@ -150,13 +154,18 @@ main() {
   timeFileName="../Res/$projectName/$time.time.log"
   # Add a title for timeFileName
   printf "commitSHA,RunWithoutEkstaziInSec,RunWithMilosEkstaziInSec,RunWithOurEkstaziInSec,ExitCode,\n" >> $timeFileName
+  # Record time per phase. 
+  # With Csv format - ATime, ETime, CTime, TestClassNum, 
+  phaseTimeFileName="../Res/$projectName/$time.phase.time.log"
+  # Add a title for phaseTimeFileName
+  printf "ATime,ETime,CTime,TestClassNum,\n" >> $phaseTimeFileName
   # If folder exists, -p will skip this mkdir.
   mkdir -p ../Res/$projectName
   # Remove the initial .ekstazi folder, if exist.
   rm -rf ../Res/$projectName/.esktazi
   lastValidSha=$(git rev-parse HEAD)
   round=20
-  run $projectName $logFileName $timeFileName true true false
+  run $projectName $logFileName $timeFileName $phaseTimeFileName true true false
   # If the above line fails, -1 will be added as the exitcode. Otherwise, 0. 
   if [[ "$?" -ne 0 ]]
   then
@@ -172,7 +181,7 @@ main() {
     ((round=$round-1))
     rollBackLastValid $rollbackNum
     rollbackNum=$?
-    run $projectName $logFileName $timeFileName true true false
+    run $projectName $logFileName $timeFileName $phaseTimeFileName true true false
     if [[ "$?" -ne 0 ]]
     then
       printf "1,\n" >> $timeFileName
@@ -188,5 +197,11 @@ main() {
 }
 # Param1: project name
 # main $1
-
 main javapoet
+# main commons-math
+# main commons-cli
+# main javapoet
+# main commons-email
+# main commons-jexl
+# main commons-validator
+# main commons-net

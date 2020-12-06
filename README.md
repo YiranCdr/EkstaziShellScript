@@ -8,6 +8,7 @@
   - \<projectName\>
     - `*.time.log` - the log file that store time-consuming information, which is actually a csv-format `commitSHA,RunWithoutEkstaziInSec,RunWithMilosEkstaziInSec,RunWithOurEkstaziInSec,ExitCode,`
     - `*.log` - the maven log for all exes, no matter they fail or not. 
+    - `*.phase.time.log` - the log file that store time-consuming information for AEC phases separately, which is actually a csv-format `ATime,ETime,CTime,TestClassNum`.
   - `ekstaziInsertionOriEkstazi.py` - `pom.xml` injector. Will inject the original ekstazi plugin to root `pom.xml`.
   - `ekstaziInsertion.py` - Will inject our ekstazi plugin to root `pom.xml`
 - \<projectName\> - git repositories. 
@@ -28,14 +29,14 @@ bash RunPerProj.sh
 ###### 2.1.2 To specify which project to run
 
 ```bash
-[line 173] main <projectName>
+[line 200] main <projectName>
 ```
 
 ###### 2.1.3 To specify which version of ekstazi to run
 
 ```bash
-[line 141] run $projectName $logFileName $timeFileName true true false
-[line 156] run $projectName $logFileName $timeFileName true true false
+[line 168] run $projectName $logFileName $timeFileName $phaseTimeFileName true true false
+[line 184] run $projectName $logFileName $timeFileName $phaseTimeFileName true true false
 ```
 
 - First bool var: Whether or not to run the project without ekstazi.
@@ -52,4 +53,18 @@ You can apply the following projects with test our script. Simply clone the proj
 - https://github.com/YiranCdr/commons-net
 - https://github.com/YiranCdr/commons-jexl
 - https://github.com/YiranCdr/commons-email
+
+#### 4. Update Log
+
+##### V1.0
+
+Original submersion
+
+##### v1.0.1
+
+Remove color-format output for `$logFileName`. 
+
+##### v1.1
+
+Add phase time counter. Now you can calculate AEC time separately. If your ekstazi doesn't support phase time counting, this new function won't affect the original functions. 
 
