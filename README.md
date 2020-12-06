@@ -42,3 +42,14 @@ bash RunPerProj.sh
 - Second bool var: Whether or not to run the project with the original ekstazi. 
 - Third bool var: whether or not to run the project with our ekstazi. 
 
+#### 3. Avaliable projects
+
+You can apply the following projects with test our script. Simply clone the project under this root directory and make modifications mentioned at 2.1.2, and then run `bash RunPerProj.sh` at this root directory. 
+
+- https://github.com/YiranCdr/javapoet
+- https://github.com/YiranCdr/commons-cli
+- https://github.com/YiranCdr/commons-math
+- https://github.com/YiranCdr/commons-net
+- https://github.com/YiranCdr/commons-jexl
+- https://github.com/YiranCdr/commons-email
+
