@@ -40,10 +40,10 @@ run() {
   # Run without Ekstazi
   if [[ $ifExecuteWithoutEkstazi == true ]]
   then
-    start_time=`date +%s`
+    start_time=`date +%s%3N`
     mvn -Drat.ignoreErrors=true -Dcheckstyle.skip clean install >> $logFileName
     mvnExitCode=$?
-    end_time=`date +%s`
+    end_time=`date +%s%3N`
     printf `expr $end_time - $start_time` >> $timeFileName
     printf "," >> $timeFileName 
     # Remove color information from logfiles (for maven ouput)
@@ -75,10 +75,10 @@ run() {
     then
       cp -r $prevEkstaziFolder .ekstazi
     fi
-    start_time=`date +%s`
+    start_time=`date +%s%3N`
     mvn -Drat.ignoreErrors=true -Dcheckstyle.skip clean install >> $logFileName
     mvnExitCode=$?
-    end_time=`date +%s`
+    end_time=`date +%s%3N`
     printf `expr $end_time - $start_time` >> $timeFileName
     printf "," >> $timeFileName 
     # Remove color information from logfiles (for maven ouput)
@@ -116,10 +116,10 @@ run() {
     # then
     #   cp -r $prevEkstaziFolder .ekstazi
     # fi
-    start_time=`date +%s`
+    start_time=`date +%s%3N`
     mvn -Drat.ignoreErrors=true -Dcheckstyle.skip clean install >> $logFileName
     mvnExitCode=$?
-    end_time=`date +%s`
+    end_time=`date +%s%3N`
     printf `expr $end_time - $start_time` >> $timeFileName
     printf "," >> $timeFileName 
     # Remove color information from logfiles (for maven ouput)

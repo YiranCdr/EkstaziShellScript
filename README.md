@@ -56,7 +56,7 @@ You can apply the following projects with test our script. Simply clone the proj
 
 #### 4. Update Log
 
-##### V1.0
+##### v1.0
 
 Original submersion
 
@@ -64,7 +64,10 @@ Original submersion
 
 Remove color-format output for `$logFileName`. 
 
-##### v1.1
+##### v1.1.0
 
 Add phase time counter. Now you can calculate AEC time separately. If your ekstazi doesn't support phase time counting, this new function won't affect the original functions. 
 
+##### v1.2.0
+
+Now time.log shows millisecond
