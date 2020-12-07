@@ -194,6 +194,7 @@ main() {
       rollbackNum=0
     fi
   done
+  cd ..
 }
 # Param1: project name
 # main $1
