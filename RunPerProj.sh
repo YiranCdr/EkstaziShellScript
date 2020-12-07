@@ -40,10 +40,10 @@ run() {
   # Run without Ekstazi
   if [[ $ifExecuteWithoutEkstazi == true ]]
   then
-    start_time=`date +%s%3N`
+    start_time=$(python -c "import time; print(int(time.time()*1000))")
     mvn -Drat.ignoreErrors=true -Dcheckstyle.skip clean install >> $logFileName
     mvnExitCode=$?
-    end_time=`date +%s%3N`
+    end_time=$(python -c "import time; print(int(time.time()*1000))")
     printf `expr $end_time - $start_time` >> $timeFileName
     printf "," >> $timeFileName 
     # Remove color information from logfiles (for maven ouput)
@@ -75,10 +75,10 @@ run() {
     then
       cp -r $prevEkstaziFolder .ekstazi
     fi
-    start_time=`date +%s%3N`
+    start_time=$(python -c "import time; print(int(time.time()*1000))")
     mvn -Drat.ignoreErrors=true -Dcheckstyle.skip clean install >> $logFileName
     mvnExitCode=$?
-    end_time=`date +%s%3N`
+    end_time=$(python -c "import time; print(int(time.time()*1000))")
     printf `expr $end_time - $start_time` >> $timeFileName
     printf "," >> $timeFileName 
     # Remove color information from logfiles (for maven ouput)
@@ -116,10 +116,10 @@ run() {
     # then
     #   cp -r $prevEkstaziFolder .ekstazi
     # fi
-    start_time=`date +%s%3N`
+    start_time=$(python -c "import time; print(int(time.time()*1000))")
     mvn -Drat.ignoreErrors=true -Dcheckstyle.skip clean install >> $logFileName
     mvnExitCode=$?
-    end_time=`date +%s%3N`
+    end_time=$(python -c "import time; print(int(time.time()*1000))")
     printf `expr $end_time - $start_time` >> $timeFileName
     printf "," >> $timeFileName 
     # Remove color information from logfiles (for maven ouput)
