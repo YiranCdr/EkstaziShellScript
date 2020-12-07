@@ -27,7 +27,7 @@ ekstaziPluginsStr = "<plugins><plugin>" \
                     "</goals>" \
                     "</execution>" \
                     "</executions>" \
-                    "<build></plugin></plugins>"
+                    "</plugin></plugins>"
 ekstaziBuildStr = "<build><plugins><plugin>" \
                   "<groupId>org.ekstazi</groupId>" \
                   "<artifactId>ekstazi-maven-plugins</artifactId>" \
