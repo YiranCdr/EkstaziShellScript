@@ -92,17 +92,18 @@ run() {
       # Print out exe time if the following 1 step are not exed at all. 
       printf "0," >> $timeFileName
       # If build fail, and tmptimeA.csv exist, record the phase time as 0.
-      printf "0,0,0,0,\n" >> $phaseTimeFileName
+      printf "0,0,0,0," >> $phaseTimeFileName
       return 1
     fi
     # If build success, and tmptimeA.csv exist, record the phase time. 
     timeParseOutput=$(python ../Res/EkstaziTimeParser.py)
-    printf "$timeParseOutput\n" >> $phaseTimeFileName
+    printf "$timeParseOutput" >> $phaseTimeFileName
     # if build success, rm the original .ekstazi folder, copy-past the new .ekstazi folder
     rm -rf $prevEkstaziFolder
     cp -r .ekstazi $prevEkstaziFolder
   else
     printf "0," >> $timeFileName
+    printf "0,0,0,0," >> $phaseTimeFileName
   fi
 
   # Run with our Ekstazi
@@ -116,6 +117,8 @@ run() {
     # then
     #   cp -r $prevEkstaziFolder .ekstazi
     # fi
+    rm -f tmptimeA.csv
+    rm -f tmptimeEC.csv
     start_time=$(python -c "import time; print(int(time.time()*1000))")
     mvn -Drat.ignoreErrors=true -Dcheckstyle.skip clean install >> $logFileName
     mvnExitCode=$?
@@ -130,10 +133,16 @@ run() {
     rm "${logFileName}s"
     if [[ "$mvnExitCode" -ne 0 ]]
     then
+      # If build fail, and tmptimeA.csv exist, record the phase time as 0.
+      printf "0,0,0,0,\n" >> $phaseTimeFileName
       return 1
     fi
+    # If build success, and tmptimeA.csv exist, record the phase time. 
+    timeParseOutput=$(python ../Res/EkstaziTimeParser.py)
+    printf "$timeParseOutput\n" >> $phaseTimeFileName
   else
     printf "0," >> $timeFileName
+    printf "0,0,0,0,\n" >> $phaseTimeFileName
   fi
 
   return 0
@@ -158,7 +167,7 @@ main() {
   # With Csv format - ATime, ETime, CTime, TestClassNum, 
   phaseTimeFileName="../Res/$projectName/$time.phase.time.log"
   # Add a title for phaseTimeFileName
-  printf "ATime,ETime,CTime,TestClassNum,\n" >> $phaseTimeFileName
+  printf "ATime_ori,ETime_ori,CTime_ori,TestClassNum_ori,ATime_ours,ETime_ours,CTime_ours,TestClassNum_ours,\n" >> $phaseTimeFileName
   # If folder exists, -p will skip this mkdir.
   mkdir -p ../Res/$projectName
   # Remove the initial .ekstazi folder, if exist.
