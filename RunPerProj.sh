@@ -148,8 +148,14 @@ run() {
   return 0
 }
 # Param1: projectName
+# Param2: if No Ekstazi
+# Param3: if with the original Ekstazi
+# Param4: if with the modified Ekstazi
 main() {
   projectName=$1
+  ifWithout=$2
+  ifOri=$3
+  ifModif=$4
   cd $projectName
   git clean -fd
   git checkout -f origin/master
@@ -174,7 +180,7 @@ main() {
   rm -rf ../Res/$projectName/.esktazi
   lastValidSha=$(git rev-parse HEAD)
   round=20
-  run $projectName $logFileName $timeFileName $phaseTimeFileName true true false
+  run $projectName $logFileName $timeFileName $phaseTimeFileName $ifWithout $ifOri $ifModif
   # If the above line fails, -1 will be added as the exitcode. Otherwise, 0. 
   if [[ "$?" -ne 0 ]]
   then
@@ -190,7 +196,7 @@ main() {
     ((round=$round-1))
     rollBackLastValid $rollbackNum
     rollbackNum=$?
-    run $projectName $logFileName $timeFileName $phaseTimeFileName true true false
+    run $projectName $logFileName $timeFileName $phaseTimeFileName $ifWithout $ifOri $ifModif
     if [[ "$?" -ne 0 ]]
     then
       printf "1,\n" >> $timeFileName
@@ -205,13 +211,22 @@ main() {
   done
   cd ..
 }
-# Param1: project name
-# main $1
-main javapoet
-# main commons-math
-# main commons-cli
-# main javapoet
-# main commons-email
-# main commons-jexl
-# main commons-validator
-# main commons-net
+
+# Which version of Ekstazi to run
+# No Ekstazi - default false
+ifWithout=${$1:-false}
+# The original Ekstazi - default false
+ifOri=${$2:-false}
+# The modified Ekstazi - default true
+ifModif=${$3:-true}
+
+
+
+
+# main javapoet $ifWithout $ifOri $ifModif
+# main commons-cli $ifWithout $ifOri $ifModif
+# main commons-math $ifWithout $ifOri $ifModif
+# main commons-email $ifWithout $ifOri $ifModif
+# main commons-jexl $ifWithout $ifOri $ifModif
+# main commons-validator $ifWithout $ifOri $ifModif
+# main commons-net $ifWithout $ifOri $ifModif
