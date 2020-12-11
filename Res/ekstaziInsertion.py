@@ -63,9 +63,9 @@ if __name__ == "__main__":
     ekstaziPluginTree = ET.fromstring(ekstaziPluginStr)
     tree.find(tag + "build/" + tag + "plugins").append(ekstaziPluginTree)
     sqlDependencyTree = ET.fromstring(sqlDependencyStr)
-    tree.find(tag + "dependencies").append(sqlDependencyStr)
+    tree.find(tag + "dependencies").append(sqlDependencyTree)
     mongoDependencyTree = ET.fromstring(mongoDependencyStr)
-    tree.find(tag + "dependencies").append(mongoDependencyStr)
+    tree.find(tag + "dependencies").append(mongoDependencyTree)
     with codecs.open(destName, "w", encoding="utf8") as f:
         f.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
     tree.write(open(destName, 'ab'))
